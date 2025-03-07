@@ -44,7 +44,7 @@ const StringOnly = () => {
       
       <div className="mt-4 p-3 bg-gray-50 rounded-md">
         <p className="text-sm text-gray-600">
-          Selected value: <span className="font-medium text-gray-800">{value ? String(value) : 'None'}</span>
+          Selected value: <span className="text-gray-500">{value ? String(value) : 'None'}</span>
         </p>
       </div>
     </ExampleCard>
