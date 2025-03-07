@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { Autocomplete } from './Autocomplete';
 
+const ExampleCard = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+      <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+    </div>
+    <div className="p-6">
+      {children}
+    </div>
+  </div>
+);
 
 const StringOnly = () => {
   const options = [
@@ -22,8 +32,7 @@ const StringOnly = () => {
   const [value, setValue] = useState<string | string[]>('');
   
   return (
-    <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Basic String Options - Non Debounced</h2>
+    <ExampleCard title="Basic String Options">
       <Autocomplete
         options={options}
         value={value}
@@ -33,13 +42,14 @@ const StringOnly = () => {
         description="Simple autocomplete with string options"
       />
       
-      <div className="mt-4">
-        <p>Selected value: {value ? String(value) : 'None'}</p>
+      <div className="mt-4 p-3 bg-gray-50 rounded-md">
+        <p className="text-sm text-gray-600">
+          Selected value: <span className="font-medium text-gray-800">{value ? String(value) : 'None'}</span>
+        </p>
       </div>
-    </div>
+    </ExampleCard>
   );
 };
-
 
 const MoreThanOne = () => {
   const options = [
@@ -59,25 +69,30 @@ const MoreThanOne = () => {
   const [value, setValue] = useState<string[]>([]);
   
   return (
-    <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Multiple Selection - Non Debounced </h2>
+    <ExampleCard title="Multiple Selection">
       <Autocomplete
         options={options}
         value={value}
-        onChange={(newValue) =>setValue(newValue as string[])}
+        onChange={(newValue) => setValue(newValue as string[])}
         multiple={true}
         label="Select frameworks"
         placeholder="Search frameworks..."
         description="Select multiple items from the list"
       />
       
-      <div className="mt-4">
-        <p>Selected values: {value.length > 0 ? value.join(', ') : 'None'}</p>
+      <div className="mt-4 p-3 bg-gray-50 rounded-md">
+        <p className="text-sm text-gray-600">
+          Selected values: 
+          {value.length > 0 ? (
+            <span className="font-medium text-gray-800"> {value.join(', ')}</span>
+          ) : (
+            <span className="text-gray-500"> None</span>
+          )}
+        </p>
       </div>
-    </div>
+    </ExampleCard>
   );
 };
-
 
 interface User {
   id: number;
@@ -100,16 +115,15 @@ const OptionWithDesc = () => {
   const [value, setValue] = useState<User | null>(null);
   
   return (
-    <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Object Options - Non Debounced</h2>
+    <ExampleCard title="Object Options with Custom Rendering">
       <Autocomplete
         options={options}
         value={value || {}}
         onChange={(val) => setValue(val as User)}
         label="Select a user"
         placeholder="Search users..."
-        description="Autocomplete with object options"
-        getOptionLabel={(option) => `${(option as User).name} (${(option as User).email})`}
+        description="Search by name or email address"
+        getOptionLabel={(option) => `${(option as User).name}`}
         renderOption={(option, isSelected) => (
           <div className="flex flex-col">
             <span className="font-medium">{(option as User).name}</span>
@@ -128,15 +142,22 @@ const OptionWithDesc = () => {
         }}
       />
       
-      <div className="mt-4">
-        <p>Selected user: {value ? `${value.name} (${value.email})` : 'None'}</p>
+      <div className="mt-4 p-3 bg-gray-50 rounded-md">
+        <p className="text-sm text-gray-600">
+          Selected user: 
+          {value ? (
+            <span className="font-medium text-gray-800"> {value.name} <span className="text-gray-500">({value.email})</span></span>
+          ) : (
+            <span className="text-gray-500"> None</span>
+          )}
+        </p>
       </div>
-    </div>
+    </ExampleCard>
   );
 };
 
 const Debounce = () => {
-  const [options, setOptions] = useState<string[]>([
+  const languages = [
     'JavaScript',
     'TypeScript',
     'Python',
@@ -149,85 +170,73 @@ const Debounce = () => {
     'Rust',
     'Swift',
     'Kotlin'
-  ]);
+  ];
   
+  const [options, setOptions] = useState<string[]>(languages);
   const [value, setValue] = useState<string | string[]>('');
   const [loading, setLoading] = useState(false);
-  
-  // Simulating an API call
+
   const handleInputChange = (inputValue: string) => {
     if (inputValue.length > 0) {
       setLoading(true);
-      // Simulate API delay
       setTimeout(() => {
-        const filteredOptions = [
-          'JavaScript',
-          'TypeScript',
-          'Python',
-          'Java',
-          'C#',
-          'C++',
-          'PHP',
-          'Ruby',
-          'Go',
-          'Rust',
-          'Swift',
-          'Kotlin'
-        ].filter(opt => opt.toLowerCase().includes(inputValue.toLowerCase()));
+        const filteredOptions = languages.filter(
+          opt => opt.toLowerCase().includes(inputValue.toLowerCase())
+        );
         
         setOptions(filteredOptions);
         setLoading(false);
       }, 500);
     } else {
-      setOptions([
-        'JavaScript',
-        'TypeScript',
-        'Python',
-        'Java',
-        'C#',
-        'C++',
-        'PHP',
-        'Ruby',
-        'Go',
-        'Rust',
-        'Swift',
-        'Kotlin'
-      ]);
+      setOptions(languages);
     }
   };
   
   return (
-    <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Debounced Search</h2>
+    <ExampleCard title="Debounced Search with Loading State">
       <Autocomplete
         options={options}
         value={value}
         onChange={setValue}
         label="Select a programming language"
         placeholder="Search languages..."
-        description="Search with 300ms debounce time"
+        description="Type to search (300ms debounce)"
         loading={loading}
         onInputChange={handleInputChange}
         debounceTime={300}
       />
       
-      <div className="mt-4">
-        <p>Selected value: {value ? String(value) : 'None'}</p>
+      <div className="mt-4 p-3 bg-gray-50 rounded-md">
+        <p className="text-sm text-gray-600">
+          Selected value: 
+          {value ? (
+            <span className="font-medium text-gray-800"> {String(value)}</span>
+          ) : (
+            <span className="text-gray-500"> None</span>
+          )}
+        </p>
       </div>
-    </div>
+    </ExampleCard>
   );
 };
 
 export const AutocompleteExamples = () => {
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-8">Autocomplete Component Examples</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <StringOnly/>
-        <MoreThanOne/>
-        <OptionWithDesc/>
-        <Debounce/>
+    <div className="bg-gray-50 min-h-screen py-12">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Autocomplete Component</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            With this website, I tried to simulate non-debounced and debounced searching system. For the non-debounced feature, I used three examples - Single choice for string only and object, and Multiple Choice
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <StringOnly />
+          <MoreThanOne />
+          <OptionWithDesc />
+          <Debounce />
+        </div>
       </div>
     </div>
   );

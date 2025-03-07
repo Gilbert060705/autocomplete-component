@@ -292,13 +292,18 @@ export const Autocomplete = <T extends string | object>({
       
       <div
         ref={refs.setReference}
-        className={`relative w-full border ${isOpen ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-300'} 
-                  rounded-md shadow-sm ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'cursor-text'}`}
+        className={`relative w-full border-2 ${
+          isOpen 
+            ? 'border-blue-500 ring-2 ring-blue-300 shadow-md' 
+            : 'border-gray-300 hover:border-gray-400'
+        } 
+        rounded-md transition-all duration-150 ease-in-out
+        ${disabled ? 'bg-gray-100 cursor-not-allowed opacity-75' : 'cursor-text'}`}
         {...getReferenceProps({
           onClick: handleInputClick,
         })}
       >
-        <div className="flex flex-wrap items-center p-2 min-h-[40px]">
+        <div className="flex flex-wrap items-center p-2 min-h-[42px]">
           {multiple && selectedValues.length > 0 && !isOpen && renderSelectedItems()}
           
           <input
@@ -333,7 +338,7 @@ export const Autocomplete = <T extends string | object>({
               {filteredOptions.length === 0 ? (
                 <div className="p-2 text-gray-500 text-sm">No options found</div>
               ) : (
-                <ul ref = {listboxRef} className="py-1" role="listbox">
+                <ul ref={listboxRef} className="py-1" role="listbox">
                   {filteredOptions.map((option, index) => {
                     const isSelected = isOptionSelected(option);
                     const isHighlighted = index === highlightedIndex;
@@ -344,11 +349,11 @@ export const Autocomplete = <T extends string | object>({
                         key={typeof option === 'string' ? option : (option as any).id || index}
                         role="option"
                         aria-selected={isSelected}
-                        className={`px-3 py-2 cursor-pointer ${
-                          isHighlighted ? 'bg-blue-50' : ''
+                        className={`px-3 py-2 cursor-pointer transition-colors duration-150 ease-in-out ${
+                          isHighlighted ? 'bg-blue-50' : 'hover:bg-gray-50'
                         } ${isSelected ? 'bg-blue-100' : ''}`}
                         onClick={() => handleOptionSelect(option)}
-                        data-index = {index}
+                        data-index={index}
                       >
                         {renderOption ? (
                           renderOption(option, isSelected)
