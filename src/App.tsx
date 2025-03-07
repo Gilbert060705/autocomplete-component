@@ -23,7 +23,7 @@ const StringOnly = () => {
   
   return (
     <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Basic String Options</h2>
+      <h2 className="text-lg font-semibold mb-4">Basic String Options - Non Debounced</h2>
       <Autocomplete
         options={options}
         value={value}
@@ -60,7 +60,7 @@ const MoreThanOne = () => {
   
   return (
     <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Multiple Selection</h2>
+      <h2 className="text-lg font-semibold mb-4">Multiple Selection - Non Debounced </h2>
       <Autocomplete
         options={options}
         value={value}
@@ -101,7 +101,7 @@ const OptionWithDesc = () => {
   
   return (
     <div className="p-4 max-w-lg">
-      <h2 className="text-lg font-semibold mb-4">Object Options</h2>
+      <h2 className="text-lg font-semibold mb-4">Object Options - Non Debounced</h2>
       <Autocomplete
         options={options}
         value={value || {}}
